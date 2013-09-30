@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import org.apache.maven.artifact.DefaultArtifact;
 import org.vafer.jdeb.DataConsumer;
 import org.vafer.jdeb.DataProducer;
 import org.vafer.jdeb.producers.DataProducerArchive;
@@ -82,6 +83,15 @@ public final class Data implements DataProducer {
         this.missingSrc = value;
     }
 
+    private String artifact;
+
+    /**
+     * @parameter expression="${artifact}"
+     */
+    public void setArtifact(String artifact) {
+        this.artifact = artifact;
+    }
+
     private String linkName;
 
     /**
@@ -132,6 +142,12 @@ public final class Data implements DataProducer {
      */
     private Mapper mapper;
 
+    private List<DefaultArtifact> pluginArtifacts = new ArrayList<DefaultArtifact>();
+
+    public void setPluginArtifacts(List pluginArtifacts) {
+        this.pluginArtifacts = pluginArtifacts;
+    }
+
     /**
      * @parameter expression="${paths}"
      */
@@ -159,6 +175,34 @@ public final class Data implements DataProducer {
         org.vafer.jdeb.mapping.Mapper[] mappers = null;
         if (mapper != null) {
             mappers = new org.vafer.jdeb.mapping.Mapper[] { mapper.createMapper() };
+        }
+
+        // artifact type
+
+        if ("dependency".equalsIgnoreCase(type)) {
+            if (artifact == null) {
+                throw new RuntimeException("artifact is not set");
+            }
+            if (!artifact.contains(":")) {
+                throw new RuntimeException("artifact not defined correctly, it needs to be in the form: groupId:artifactId");
+            }
+
+            boolean found = false;
+            for (DefaultArtifact artifact : pluginArtifacts) {
+                String groupArtifact = String.format("%s:%s", artifact.getGroupId(), artifact.getArtifactId());
+                if (groupArtifact.equals(this.artifact)) {
+                    // found the artifact we are looking for
+                    src = artifact.getFile();
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                throw new RuntimeException("could not find dependency: " + artifact + " in project, did you include it as a dependency?");
+            }
+
+            new DataProducerFile(src, dst, includePatterns, excludePatterns, mappers).produce(pReceiver);
+            return;
         }
 
         // link type

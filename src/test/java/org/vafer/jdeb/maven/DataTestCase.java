@@ -119,4 +119,43 @@ public class DataTestCase extends TestCase {
         assertTrue(unknownTypeException.getMessage().startsWith("Unknown type"));
     }
 
+    public void testFailOnMissingDependency() throws IOException {
+        RuntimeException expectedException = null;
+        data.setArtifact("com.foo.bar:artifactId");
+        data.setType("dependency");
+        data.setMissingSrc(MissingSourceBehavior.IGNORE.name());
+        try {
+            data.produce(null);
+            fail();
+        } catch (RuntimeException expected) {
+            expectedException = expected;
+        }
+        assertTrue(expectedException.getMessage().startsWith("could not find dependency"));
+    }
+    public void testFailOnIncorrectlyNamedDependency() throws IOException {
+        RuntimeException expectedException = null;
+        data.setArtifact("com.foo.bar");
+        data.setType("dependency");
+        data.setMissingSrc(MissingSourceBehavior.IGNORE.name());
+        try {
+            data.produce(null);
+            fail();
+        } catch (RuntimeException expected) {
+            expectedException = expected;
+        }
+        assertTrue(expectedException.getMessage().startsWith("artifact not defined correctly"));
+    }
+
+    public void testFailNoDependency() throws IOException {
+        RuntimeException expectedException = null;
+        data.setType("dependency");
+        data.setMissingSrc(MissingSourceBehavior.IGNORE.name());
+        try {
+            data.produce(null);
+            fail();
+        } catch (RuntimeException expected) {
+            expectedException = expected;
+        }
+        assertTrue(expectedException.getMessage().startsWith("artifact is not set"));
+    }
 }

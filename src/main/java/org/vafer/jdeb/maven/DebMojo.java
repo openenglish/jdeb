@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.DefaultArtifact;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
@@ -243,6 +244,9 @@ public class DebMojo extends AbstractPluginMojo {
      */
     private boolean verbose;
 
+    /** @parameter default-value="${plugin.artifacts}" */
+    private List<DefaultArtifact> pluginArtifacts;
+
     /* end of parameters */
 
     private String openReplaceToken = "[[";
@@ -262,6 +266,10 @@ public class DebMojo extends AbstractPluginMojo {
     }
 
     protected void setData( Data[] dataSet ) {
+        // add artifact related info to Data
+        for (Data data : dataSet) {
+            data.setPluginArtifacts(pluginArtifacts);
+        }
         this.dataSet = dataSet;
         dataProducers.clear();
         if (dataSet != null) {
