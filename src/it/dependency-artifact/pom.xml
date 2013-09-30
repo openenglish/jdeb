@@ -13,7 +13,7 @@
         <plugins>
             <plugin>
                 <groupId>org.vafer</groupId>
-                <artifactId>jdeb</artifactId>
+                <artifactId>oe-jdeb</artifactId>
                 <version>@project.version@</version>
                 <dependencies>
                     <dependency>

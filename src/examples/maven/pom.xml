@@ -12,7 +12,7 @@
     <build>
         <plugins>
             <plugin>
-                <artifactId>jdeb</artifactId>
+                <artifactId>oe-jdeb</artifactId>
                 <groupId>org.vafer</groupId>
                 <version>1.0</version>
                 <executions>
