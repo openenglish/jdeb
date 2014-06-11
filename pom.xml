@@ -133,7 +133,7 @@
                 <artifactId>maven-invoker-plugin</artifactId>
                 <version>1.6</version>
                 <configuration>
-                    <!-- <debug>true</debug> -->
+                     <debug>true</debug>
                     <projectsDirectory>src/it</projectsDirectory>
                     <cloneProjectsTo>${project.build.directory}/it</cloneProjectsTo>
                     <preBuildHookScript>setup</preBuildHookScript>
@@ -281,28 +281,11 @@
 
     <distributionManagement>
         <repository>
-            <id>openEnglish-local-repo-rw</id>
+            <id>central</id>
             <name>OpenEnglish local artifacts repository</name>
-            <url>http://artifactory.thinkglish.com/artifactory/libs-release-local</url>
+            <url>http://repository.oe-sys.com/artifactory/libs-release-local</url>
         </repository>
-        <snapshotRepository>
-            <id>openEnglish-local-repo-rw</id>
-            <name>OpenEnglish local artifacts repository</name>
-            <url>http://artifactory.thinkglish.com/artifactory/libs-snapshot-local</url>
-        </snapshotRepository>
     </distributionManagement>
 
-    <repositories>
-        <repository>
-            <id>openEnglish-local-repo</id>
-            <name>OpenEnglish local artifacts repository</name>
-            <url>http://artifactory.thinkglish.com/artifactory/local-repo/</url>
-        </repository>
-        <repository>
-            <id>openEnglish-remote-repos</id>
-            <name>OpenEnglish remote artifacts repository</name>
-            <url>http://artifactory.thinkglish.com/artifactory/remote-repos</url>
-        </repository>
-    </repositories>
 
 </project>

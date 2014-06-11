@@ -173,6 +173,9 @@ public final class Utils {
     public static String convertToDebianVersion( String version, Date timestamp ) {
         version = version.replace('-', '+');
         if (version.endsWith("+SNAPSHOT")) {
+            if ("FIXED+SNAPSHOT".equals(version)) {
+                version = "0.0~SNAPSHOT";
+            }
             version = version.substring(0, version.length() - "+SNAPSHOT".length());
             version += "~";
 
